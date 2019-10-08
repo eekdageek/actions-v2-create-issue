@@ -1,18 +1,19 @@
 const core = require('@actions/core');
-const wait = require('./wait');
-
+const github = require('@actions/github');
+const githubToken = process.env.GITHUB_TOKEN;
+const octokit = new github.GitHub(githubToken);
 
 // most @actions toolkit packages have async methods
 async function run() {
   try { 
-    const ms = core.getInput('milliseconds');
-    console.log(`Waiting ${ms} milliseconds ...`)
-
-    core.debug((new Date()).toTimeString())
-    wait(parseInt(ms));
-    core.debug((new Date()).toTimeString())
-
-    core.setOutput('time', new Date().toTimeString());
+    const title = core.getInput('title');
+    const returnval = await octokit.issues.create(
+      {
+        ...github.context.repo,
+        title
+      }
+    );
+    console.log(returnval);
   } 
   catch (error) {
     core.setFailed(error.message);
