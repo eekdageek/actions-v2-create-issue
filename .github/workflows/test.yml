@@ -12,6 +12,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - uses: ./
+      env: 
+        GITHUB_TOKEN: ${{secrets.github_token}}
       with: 
         title: my_test_issue
 
